@@ -1,0 +1,35 @@
+version: '3'
+services:
+  api:
+    restart: always
+    build: ./api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/api
+    networks:
+      backend:
+        ipv4_address: 172.16.238.11
+    deploy:
+      restart_policy:
+        condition: on-failure
+    command: python3 ./django_rest_example/manage.py runserver 0.0.0.0:8000
+  web:
+    image: nginx:1.19.1
+    ports:
+      - "80:80"
+    volumes:
+      - ./web:/usr/share/nginx/html
+      - ./nginx:/etc/nginx/conf.d
+    networks:
+      backend:
+        ipv4_address: 172.16.238.10
+    deploy:
+      restart_policy:
+        condition: on-failure
+networks:
+  backend: 
+      ipam:
+        driver: default
+        config:
+          - subnet: "172.16.238.0/24"
