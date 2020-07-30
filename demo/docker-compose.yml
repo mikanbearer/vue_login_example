@@ -13,7 +13,7 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-    command: python3 ./django_rest_example/manage.py runserver 0.0.0.0:8000
+    command: uwsgi --ini uwsgi.ini
   web:
     image: nginx:1.19.1
     ports:
